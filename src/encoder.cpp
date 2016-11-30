@@ -2,7 +2,9 @@
 
 #include <stdexcept>
 
-encoder::encoder(const std::string& filePath)
+encoder::encoder(std::unique_ptr<ifile>&& input, std::unique_ptr<ifile>&& output) :
+	_input(std::move(input)),
+	_output(std::move(output))
 {
 	lgf = lame_init();
 
@@ -13,4 +15,8 @@ encoder::encoder(const std::string& filePath)
 encoder::~encoder()
 {
 	lame_close(lgf);
+}
+
+void encoder::encode()
+{
 }

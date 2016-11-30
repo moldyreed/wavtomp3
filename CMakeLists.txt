@@ -32,6 +32,7 @@ if(UNIX OR APPLE)
             src/main.cpp
             src/nix/filesystem.cpp
             src/encoder.cpp
+			src/wav.cpp
     )
 endif()
 
@@ -49,6 +50,7 @@ target_link_libraries(
 	${PROJECT_NAME}
 	
 	${LAME_LIBRARIES}
+	pthread
 	)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION "bin")

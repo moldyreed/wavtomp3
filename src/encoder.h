@@ -7,14 +7,20 @@
 
 #include <lame/lame.h>
 
+#include "file.h"
+
 class encoder
 {
 public:
-	encoder(const std::string& filePath);
+	encoder(std::unique_ptr<ifile>&& input, std::unique_ptr<ifile>&& output);
+	encoder(encoder&&) = default;
 	~encoder();
+
+	void encode();
+
 private:
-	std::ifstream inputFile;
-	std::ofstream outputFile;
+	std::unique_ptr<ifile> _input;
+	std::unique_ptr<ifile> _output;
 
 	lame_global_flags* lgf;
 };
