@@ -14,6 +14,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g3")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O3")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+find_package(Lame REQUIRED)
+if(LAME_FOUND)
+    INCLUDE_DIRECTORIES(${LAME_INCLUDE_DIRS})
+endif()
+
 INCLUDE_DIRECTORIES(
         src
 )
@@ -38,5 +45,10 @@ if(WIN32)
     )
 endif()
 
+target_link_libraries(
+	${PROJECT_NAME}
+	
+	${LAME_LIBRARIES}
+	)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION "bin")

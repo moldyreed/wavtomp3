@@ -4,39 +4,46 @@
 
 #include "filesystem.h"
 
+#include <unistd.h>
+
 struct program_opts
 {
-    std::string dirpath;
+	std::string dirpath;
 };
 
-struct program_opts parseOpts(int argc, char *argv[])
+struct program_opts parseOpts(int argc, char* argv[])
 {
-    program_opts opts{""};
-    if(argc != 2)
-        throw std::runtime_error("Please define WAV directory");
+	program_opts opts{""};
 
-    opts.dirpath = argv[1];
-    return opts;
+	if (argc < 2)
+		throw std::runtime_error("Please define WAV directory");
+
+	opts.dirpath = argv[1];
+	return opts;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    try{
-        program_opts opts = parseOpts(argc, argv);
+	try
+	{
+		// get number of cpu
+		auto numCPUs = sysconf(_SC_NPROCESSORS_ONLN);
+		program_opts opts = parseOpts(argc, argv);
+		// get directory's content
+		auto files = filesystem::getFilesByPath(opts.dirpath);
+		// filter only wav files
+		auto wavFiles = filesystem::filterFileNames(files, "*.wav");
 
-        // get directory's content
-        auto files = filesystem::getFilesByPath(opts.dirpath);
-
-        // read files and encode it
-        for(const auto& filepath : files)
-        {
-            std::cout << filepath << std::endl;
-        }
-    }
-    catch(std::exception&e )
-    {
-        std::cerr << e.what() << std::endl;
-    }
+		// read files and encode it
+		for (const auto& filepath : wavFiles)
+		{
+			std::cout << filepath << std::endl;
+		}
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 
 	return 0;
 }
