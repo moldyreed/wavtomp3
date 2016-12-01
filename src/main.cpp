@@ -33,14 +33,14 @@ std::string makeMP3FilePath(const std::string& filePath)
 
 void* runTask(void* arg)
 {
-	AsyncQueue<std::string>* queue = (AsyncQueue<std::string>*)arg;
-	const auto filepath = queue->pop();
-	const auto mp3path = makeMP3FilePath(filepath);
-	auto input = createFile(filepath, format::wav);
-	auto output = createFile(mp3path, format::mp3);
+//	AsyncQueue<std::string>* queue = (AsyncQueue<std::string>*)arg;
+//	const auto filepath = queue->pop();
+//	const auto mp3path = makeMP3FilePath(filepath);
+//	auto input = createFile(filepath, format::wav);
+//	auto output = createFile(mp3path, format::mp3);
 //	encoder enc(*input, *output);
 //	enc.encode();
-	std::cout << mp3path << std::endl;
+//	std::cout << mp3path << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -54,30 +54,33 @@ int main(int argc, char* argv[])
 		auto files = filesystem::getFilesByPath(opts.dirpath);
 		// filter only wav files
 		auto wavFiles = filesystem::filterFileNames(files, "*.wav");
-		AsyncQueue<std::string> queue;
+
+//		AsyncQueue<std::string> filePathEncodeQueue;
 
 		// read files and encode it
 		for (const auto& filepath : wavFiles)
 		{
-			queue.push(filepath);
+			const auto mp3path = makeMP3FilePath(filepath);
+			auto input = createFile(filepath, format::wav);
+			auto output = createFile(mp3path, format::mp3);
+			encoder enc(std::move(input), std::move(output));
+			enc.encode();
+			std::cout << mp3path << std::endl;
 		}
 
-		pthread_t threads[numCPUs];
-
-		for (auto i = 0; i < numCPUs; i++)
-		{
-			pthread_create(&threads[i], NULL, runTask, (void*)&queue);
-		}
-
-		for (auto i = 0; i < numCPUs; i++)
-		{
-			int ret = pthread_join(threads[i], NULL);
-
-			if (ret != 0)
-			{
-				std::cerr << "A POSIX thread error occured." << std::endl;
-			}
-		}
+//		pthread_t threads[numCPUs];
+//		for (auto i = 0; i < numCPUs; i++)
+//		{
+//			pthread_create(&threads[i], NULL, runTask, (void*)&filePathEncodeQueue);
+//		}
+//		for (auto i = 0; i < numCPUs; i++)
+//		{
+//			int ret = pthread_join(threads[i], NULL);
+//			if (ret != 0)
+//			{
+//				std::cerr << "A POSIX thread error occured." << std::endl;
+//			}
+//		}
 	}
 	catch (std::exception& e)
 	{

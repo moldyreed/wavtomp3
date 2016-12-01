@@ -32,7 +32,8 @@ if(UNIX OR APPLE)
             src/main.cpp
             src/nix/filesystem.cpp
             src/encoder.cpp
-			src/wav.cpp
+			src/wavfile.cpp
+			src/mp3file.cpp
     )
 endif()
 

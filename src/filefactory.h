@@ -3,7 +3,8 @@
 
 #include "file.h"
 #include <memory>
-#include "wav.h"
+#include "wavfile.h"
+#include "mp3file.h"
 
 enum format
 {
@@ -17,6 +18,10 @@ std::unique_ptr<ifile> createFile(const std::string& fileName, format f)
 	{
 		case wav:
 			return std::make_unique<wavfile>(fileName);
+			break;
+
+		case mp3:
+			return std::make_unique<mp3file>(fileName);
 			break;
 
 		default:

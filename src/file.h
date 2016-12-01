@@ -6,9 +6,8 @@
 class ifile
 {
 public:
-	virtual std::uint32_t read() = 0;
-	virtual std::uint32_t write() = 0;
-
+	virtual std::size_t read(char* buffer, std::size_t bufferSize) = 0;
+	virtual void write(char* buffer, std::size_t bufferSize) = 0;
 };
 
 #endif // FILE_H
