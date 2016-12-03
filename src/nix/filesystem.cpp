@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <fnmatch.h>
 
 std::vector<std::string> filesystem::getFilesByPath(const std::string& path)

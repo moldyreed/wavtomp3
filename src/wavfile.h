@@ -2,6 +2,7 @@
 #define WAV_H
 
 #include <fstream>
+#include <vector>
 #include "file.h"
 
 class wavfile : public ifile
@@ -11,6 +12,8 @@ public:
 	wavfile(const wavfile&) = delete;
 	wavfile(const std::string& filePath);
 
+    std::size_t read(std::vector<int>& lBuffer, std::vector<int>& rBuffer,std::size_t bufferSize);
+    std::size_t read(std::vector<short>& buffer);
 	std::size_t read(char* buffer, std::size_t bufferSize);
 	void write(char* buffer, std::size_t bufferSize) {}
 
@@ -29,7 +32,10 @@ public:
 		unsigned int bits_per_sample;				// bits per sample, 8- 8bits, 16- 16 bits etc
 		unsigned char data_chunk_header [4];		// DATA string or FLLR string
 		unsigned int data_size;						// NumSamples * NumChannels * BitsPerSample/8 - size of the next chunk that will be read
-	};
+        long bytes_in_each_channel;
+        long size_of_each_sample;
+        long num_samples;
+    };
 
 	WavHeader headers() { return _wavHeader; }
 
@@ -37,6 +43,8 @@ private:
 	WavHeader _wavHeader;
 	std::ifstream _inputFile;
 	std::string _path;
+
+    std::size_t offset;
 
 	void readHeaders();
 };

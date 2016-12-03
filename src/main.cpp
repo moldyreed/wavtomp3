@@ -60,12 +60,12 @@ int main(int argc, char* argv[])
 		// read files and encode it
 		for (const auto& filepath : wavFiles)
 		{
+            std::cout << "Proccessing file: " << filepath << std::endl;
 			const auto mp3path = makeMP3FilePath(filepath);
 			auto input = createFile(filepath, format::wav);
 			auto output = createFile(mp3path, format::mp3);
 			encoder enc(std::move(input), std::move(output));
 			enc.encode();
-			std::cout << mp3path << std::endl;
 		}
 
 //		pthread_t threads[numCPUs];

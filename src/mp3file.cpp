@@ -1,6 +1,7 @@
 #include "mp3file.h"
 
 mp3file::mp3file(const std::string& filePath) :
+    ifile(filePath),
 	_outputFile(filePath, std::ofstream::binary)
 {
 	if (!_outputFile)
