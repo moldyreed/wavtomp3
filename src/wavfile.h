@@ -13,7 +13,7 @@ public:
 	wavfile(const std::string& filePath);
 
     std::size_t read(std::vector<int>& lBuffer, std::vector<int>& rBuffer,std::size_t bufferSize);
-    std::size_t read(std::vector<short>& buffer);
+    std::size_t read(std::vector<std::int32_t>& inteleavedBuffer);
 	std::size_t read(char* buffer, std::size_t bufferSize);
 	void write(char* buffer, std::size_t bufferSize) {}
 
