@@ -1,6 +1,6 @@
 # wavtomp3
 
-A tool that encodes 8/16/24/32 bit Wave files into MP3 with default setting using LAME encoder.
+A tool which encodes 8/16/24/32 bit Wave files into MP3 files using LAME encoder.
 
 ##Usage
 ```
