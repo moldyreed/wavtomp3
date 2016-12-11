@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <fnmatch.h>
 
-std::vector<std::string> filesystem::getFilesByPath(const std::string& path)
+std::vector<std::string> filesystem::getFilesByPath(const std::string& path, const std::string &filePattern)
 {
 	std::vector<std::string> files;
 
@@ -39,7 +39,8 @@ std::vector<std::string> filesystem::getFilesByPath(const std::string& path)
 			}
 			else
 			{
-				files.emplace_back(fileName);
+                if (fnmatch(filePattern.c_str(), dp->d_name, 0) == 0)
+                    files.emplace_back(fileName);
 			}
 		}
 	}
@@ -59,18 +60,4 @@ bool filesystem::isDirectory(const std::string& path)
 	}
 
 	return S_ISDIR(pathStat.st_mode);
-}
-
-std::vector<std::string> filesystem::filterFileNames(const std::vector<std::string>& fileNames, const std::string& pattern)
-{
-	std::vector<std::string> filteredFileNames;
-
-	for (const auto& fileName : fileNames)
-	{
-		// match path tand call method
-		if (fnmatch(pattern.c_str(), fileName.c_str(), 0) == 0)
-			filteredFileNames.emplace_back(fileName);
-	}
-
-	return filteredFileNames;
 }

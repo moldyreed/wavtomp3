@@ -30,6 +30,9 @@
 #mp3 files
 *.mp3
 
+# mac os x trash files
+.DS_Store
+
 # Cmake
 build/
 CPackOptions.cmake.in

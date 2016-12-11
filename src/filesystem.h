@@ -7,7 +7,7 @@
 class filesystem
 {
 public:
-        static std::vector<std::string> getFilesByPath(const std::string& path, const std::string &filePattern);
+        static std::vector<std::string> getFilesByPath(const std::string& path, const std::string &filePattern = "*");
 	static bool isDirectory(const std::string& path);
 };
 
