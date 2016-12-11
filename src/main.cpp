@@ -33,15 +33,20 @@ std::string makeMP3FilePath(const std::string& filePath)
 
 void* runTask(void* arg)
 {
-    AsyncQueue<std::string>* queue = (AsyncQueue<std::string>*)arg;
-    if(queue->hasMoreItems()) {
-        const auto filepath = queue->pop();
-        const auto mp3path = makeMP3FilePath(filepath);
-//        std::unique_ptr<ifile>&& input = createFile(filepath, format::wav);
-//        std::unique_ptr<ifile>&& output = createFile(mp3path, format::mp3);
-        encoder enc(createFile(filepath, format::wav), createFile(mp3path, format::mp3));
-        enc.encode();
+    try {
+        AsyncQueue<std::string>* queue = reinterpret_cast<AsyncQueue<std::string>*>(arg);
+        if(queue->hasMoreItems()) {
+
+            const auto filepath = queue->pop();
+            const auto mp3path = makeMP3FilePath(filepath);
+            encoder enc(createFile(filepath, format::wav), createFile(mp3path, format::mp3));
+            enc.encode();
+        }
+    } catch(std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
+
+    return (void *)0;
 }
 
 int main(int argc, char* argv[])
@@ -55,6 +60,10 @@ int main(int argc, char* argv[])
         // filter only wav files
         auto wavFiles = filesystem::filterFileNames(files, "*.wav");
 
+        if(wavFiles.size() == 0) {
+            throw std::runtime_error("No wav files in: " + opts.dirpath);
+        }
+
         AsyncQueue<std::string> filePathEncodeQueue;
 
         // add filepaths into async queue
@@ -62,19 +71,26 @@ int main(int argc, char* argv[])
             filePathEncodeQueue.push(filepath);
         }
 
+        // create thread pool
         pthread_t threads[numCPUs];
         for (auto i = 0; i < numCPUs; i++) {
-            pthread_create(&threads[i], NULL, runTask, (void*)&filePathEncodeQueue);
+            auto ret = pthread_create(&threads[i], NULL, runTask, (void*)&filePathEncodeQueue);
+
+            if(ret) {
+                throw std::runtime_error("Cannot create new thread.");
+            }
         }
 
+        // join all thread into main thread
         for (auto i = 0; i < numCPUs; i++) {
-            int ret = pthread_join(threads[i], NULL);
+            auto ret = pthread_join(threads[i], NULL);
             if (ret != 0) {
-                std::cerr << "A POSIX thread error occured." << std::endl;
+                throw std::runtime_error("A POSIX thread error occured.");
             }
         }
     } catch (std::exception& e) {
         std::cerr << e.what() << std::endl;
+        return 1;
     }
 
     return 0;

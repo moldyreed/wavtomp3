@@ -17,6 +17,11 @@ wavfile::wavfile(const std::string& filePath) :
     readHeaders();
 }
 
+wavfile::~wavfile()
+{
+    _inputFile.close();
+}
+
 std::size_t wavfile::read(std::vector<std::int32_t> &inteleavedBuffer)
 {
     inteleavedBuffer.clear();
@@ -152,38 +157,13 @@ void wavfile::readHeaders()
 
 std::size_t wavfile::read(char* buffer, std::size_t bufferSize)
 {
-    char data_buffer[_wavHeader.size_of_each_sample];
-    for(auto i = 0 ; i < bufferSize; i += sizeof(data_buffer)) {
-        _inputFile.read(data_buffer, sizeof(data_buffer));
-        if (_inputFile.eof() != true) {
-
-            // dump the data read
-            int data_in_channel = 0;
-
-            for (auto xchannels = 0; xchannels < _wavHeader.channels; xchannels ++ ) {
-                printf("Channel#%d : ", (xchannels+1));
-                // convert data from little endian to big endian based on bytes in each channel sample
-                if (_wavHeader.bytes_in_each_channel == 4) {
-                    data_in_channel =	data_buffer[0] |
-                                        (data_buffer[1]<<8) |
-                                        (data_buffer[2]<<16) |
-                                        (data_buffer[3]<<24);
-                } else if (_wavHeader.bytes_in_each_channel == 3) {
-                    data_in_channel =	data_buffer[0] |
-                                        (data_buffer[1]<<8) |
-                                        (data_buffer[2]<<16);
-                } else if (_wavHeader.bytes_in_each_channel == 2) {
-                    data_in_channel = data_buffer[0] |
-                                      (data_buffer[1] << 8);
-                } else if (_wavHeader.bytes_in_each_channel == 1) {
-                    data_in_channel = data_buffer[0];
-                }
-
-
-            }
+    auto i = 0;
+    for(; i < bufferSize; i++) {
+        _inputFile.read(buffer, bufferSize);
+        if (_inputFile.eof() == true) {
+            break;
         }
-    }
 
-    auto& streamSize = _inputFile.read(buffer, bufferSize);
-    return streamSize.gcount();
+    }
+    return i;
 }

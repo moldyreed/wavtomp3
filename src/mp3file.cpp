@@ -5,7 +5,12 @@ mp3file::mp3file(const std::string& filePath) :
 	_outputFile(filePath, std::ofstream::binary)
 {
 	if (!_outputFile)
-		throw std::runtime_error("Can't open mp3 file: " + filePath);
+        throw std::runtime_error("Can't open mp3 file: " + filePath);
+}
+
+mp3file::~mp3file()
+{
+    _outputFile.close();
 }
 
 void mp3file::write(char* buffer, std::size_t bufferSize)
