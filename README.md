@@ -25,7 +25,7 @@ make
 
 ##Building Windows
 
-Before build ensure that you have GCC compiler in PATH environment
+Before build ensure that you have a GCC compiler's path in environment's PATH 
 
 ```
 git clone https://github.com/sickevilfuck/wavtomp3.git --recursive
