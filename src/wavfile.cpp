@@ -31,7 +31,7 @@ std::size_t wavfile::read(std::vector<std::int32_t> &inteleavedBuffer)
             return i;
         }
 
-        // convet to 32 bit int
+        // convert to 32 bit int
         switch (_wavHeader.bits_per_sample) {
         case 32:
             datum = chars[0] << (b - 32) | chars[1] << (b - 24) | chars[2] << (b - 16) | chars[3] << (b - 8);

@@ -31,6 +31,12 @@ public:
 	{
 	}
 
+        bool hasMoreItems()
+        {
+            std::lock_guard<std::mutex> lock(*mutex);
+            return !queue->empty();
+        }
+
 	/**
 	 * @brief Push a value to the async queue
 	 */
@@ -64,7 +70,7 @@ public:
 
 		while (queue->empty())
 		{
-			cond->wait(lock);
+                        cond->wait(lock);
 		}
 
 		T object = std::move(queue->front());
