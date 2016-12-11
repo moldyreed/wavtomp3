@@ -26,11 +26,12 @@ std::size_t wavfile::read(std::vector<std::int32_t> &inteleavedBuffer)
 {
     inteleavedBuffer.clear();
     auto i = 0;
-    static const int b = sizeof(int) * 8;
+    static const std::int32_t b = sizeof(std::int32_t) * 8;
+    // TODO get rid of condition in loop, make diffirent loops for each byte processing
     for(; i < inteleavedBuffer.capacity(); i++) {
         std::int32_t datum = 0;
 
-        unsigned char chars[_wavHeader.bits_per_sample / 8];
+        std::uint8_t chars[_wavHeader.bits_per_sample / 8];
         _inputFile.read(reinterpret_cast<char*>(chars), sizeof(chars));
         if (_inputFile.eof() == true) {
             return i;
@@ -60,8 +61,8 @@ std::size_t wavfile::read(std::vector<std::int32_t> &inteleavedBuffer)
 
 void wavfile::readHeaders()
 {
-    unsigned char buffer4[4];
-    unsigned char buffer2[2];
+    std::uint8_t buffer4[4];
+    std::uint8_t buffer2[2];
     _inputFile.read((char*)_wavHeader.riff, sizeof(_wavHeader.riff));
     _inputFile.read((char*)buffer4, sizeof(buffer4));
 
@@ -130,12 +131,7 @@ void wavfile::readHeaders()
 
 std::size_t wavfile::read(char* buffer, std::size_t bufferSize)
 {
-    auto i = 0;
-    for(; i < bufferSize; i++) {
-        _inputFile.read(buffer, bufferSize);
-        if (_inputFile.eof() == true) {
-            break;
-        }
-    }
-    return i;
+
+    _inputFile.read(buffer, bufferSize);
+    return _inputFile.tellg();
 }

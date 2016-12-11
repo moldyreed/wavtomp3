@@ -36,7 +36,7 @@ void encoder::encode()
     readBuffer.reserve(samples_to_read * 2);
     std::unique_ptr<unsigned char[]> wBuffer = std::make_unique<unsigned char[]>(LAME_MAXMP3BUFFER);
 
-    int read = 0, write = 0;
+    auto read = 0, write = 0;
     // TODO pass more or less two channels
 
     std::vector<std::int32_t> lpcm;

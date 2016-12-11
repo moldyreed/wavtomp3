@@ -36,7 +36,6 @@ void* runTask(void* arg)
     try {
         AsyncQueue<std::string>* queue = reinterpret_cast<AsyncQueue<std::string>*>(arg);
         if(queue->hasMoreItems()) {
-
             const auto filepath = queue->pop();
             const auto mp3path = makeMP3FilePath(filepath);
             encoder enc(createFile(filepath, format::wav), createFile(mp3path, format::mp3));
@@ -66,6 +65,7 @@ int main(int argc, char* argv[])
 
         // add filepaths into async queue
         for (const auto& filepath : wavFiles) {
+            std::cout << "File: " << filepath << " will be encoded" << std::endl;
             filePathEncodeQueue.push(filepath);
         }
 

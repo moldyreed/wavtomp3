@@ -12,17 +12,17 @@
 class encoder
 {
 public:
-	encoder(std::unique_ptr<ifile>&& input, std::unique_ptr<ifile>&& output);
-	encoder(encoder&&) = default;
-	~encoder();
+    encoder(std::unique_ptr<ifile>&& input, std::unique_ptr<ifile>&& output);
+    encoder(encoder&&) = default;
+    ~encoder();
 
-	void encode();
+    void encode();
 
 private:
-	std::unique_ptr<ifile> _input;
-	std::unique_ptr<ifile> _output;
+    std::unique_ptr<ifile> _input;
+    std::unique_ptr<ifile> _output;
 
-	lame_global_flags* lgf;
+    lame_global_flags* lgf;
 };
 
 #endif // ENCODER_H
