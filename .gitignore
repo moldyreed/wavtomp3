@@ -27,6 +27,9 @@
 *.out
 *.app
 
+#mp3 files
+*.mp3
+
 # Cmake
 build/
 CPackOptions.cmake.in
