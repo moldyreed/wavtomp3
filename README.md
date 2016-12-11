@@ -7,7 +7,7 @@ A tool that encodes 8/16/24/32 bit Wave files into MP3 with default setting usin
 wavtomp3 /path/to/wav/files
 ```
 
-##Requrements
+##Requirements
 ```
 gcc >= 5.3
 cmake >= 2.8
@@ -25,7 +25,7 @@ make
 
 ##Building Windows
 
-Before build ensure that you have gcc compiler in PATH environment
+Before build ensure that you have GCC compiler in PATH environment
 
 ```
 git clone https://github.com/sickevilfuck/wavtomp3.git --recursive
