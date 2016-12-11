@@ -42,14 +42,17 @@ if(WIN32)
             src/main.cpp
             src/win/filesystem.cpp
             src/encoder.cpp
+            src/wavfile.cpp
+            src/mp3file.cpp
     )
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 endif()
 
 target_link_libraries(
-	${PROJECT_NAME}
-	
+        ${PROJECT_NAME}
+
         mp3lame
-	pthread
-	)
+        pthread
+        )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION "bin")

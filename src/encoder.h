@@ -5,7 +5,7 @@
 #include <fstream>
 #include <memory>
 
-#include <lame/lame.h>
+#include "lame.h"
 
 #include "file.h"
 

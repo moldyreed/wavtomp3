@@ -55,10 +55,8 @@ int main(int argc, char* argv[])
         // get number of cpu
         auto numCPUs = std::thread::hardware_concurrency();
         program_opts opts = parseOpts(argc, argv);
-        // get directory's content
-        auto files = filesystem::getFilesByPath(opts.dirpath);
-        // filter only wav files
-        auto wavFiles = filesystem::filterFileNames(files, "*.wav");
+        // get directory's content and filter only wav files
+        auto wavFiles = filesystem::getFilesByPath(opts.dirpath, "*.wav");
 
         if(wavFiles.size() == 0) {
             throw std::runtime_error("No wav files in: " + opts.dirpath);
