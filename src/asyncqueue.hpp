@@ -14,7 +14,6 @@ private:
 	std::shared_ptr<std::condition_variable> cond;
 
 public:
-	/* Big 5 */
 	AsyncQueue(const AsyncQueue& other) = default;
 	AsyncQueue(AsyncQueue&& other) = default;
 	AsyncQueue& operator=(const AsyncQueue& other) = default;
@@ -37,9 +36,6 @@ public:
             return !queue->empty();
         }
 
-	/**
-	 * @brief Push a value to the async queue
-	 */
 	void push(const T& object)
 	{
 		{
@@ -49,9 +45,6 @@ public:
 		cond->notify_one();
 	}
 
-	/**
-	 * @brief Push a value to the async queue (move variant)
-	 */
 	void push(T&& object)
 	{
 		{
@@ -61,9 +54,6 @@ public:
 		cond->notify_one();
 	}
 
-	/**
-	 * @brief Pop a value from the queue
-	 */
 	T pop()
 	{
 		std::unique_lock<std::mutex> lock(*mutex);

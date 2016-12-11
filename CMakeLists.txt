@@ -16,10 +16,8 @@ set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O3")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
-find_package(Lame REQUIRED)
-if(LAME_FOUND)
-    INCLUDE_DIRECTORIES(${LAME_INCLUDE_DIRS})
-endif()
+# build lame from sources
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/lame)
 
 INCLUDE_DIRECTORIES(
         src
@@ -32,8 +30,8 @@ if(UNIX OR APPLE)
             src/main.cpp
             src/nix/filesystem.cpp
             src/encoder.cpp
-			src/wavfile.cpp
-			src/mp3file.cpp
+            src/wavfile.cpp
+            src/mp3file.cpp
     )
 endif()
 
@@ -50,7 +48,7 @@ endif()
 target_link_libraries(
 	${PROJECT_NAME}
 	
-	${LAME_LIBRARIES}
+        mp3lame
 	pthread
 	)
 

@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         for (auto i = 0; i < numCPUs; i++) {
             auto ret = pthread_create(&threads[i], NULL, runTask, (void*)&filePathEncodeQueue);
 
-            if(ret) {
+            if(ret != 0) {
                 throw std::runtime_error("Cannot create new thread.");
             }
         }

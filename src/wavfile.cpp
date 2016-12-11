@@ -133,26 +133,6 @@ void wavfile::readHeaders()
     printf("Approx.Duration in seconds=%f\n", duration_in_seconds);
     _wavHeader.bytes_in_each_channel = ( _wavHeader.size_of_each_sample / _wavHeader.channels);
     _wavHeader.num_samples = (8 * _wavHeader.data_size) / (_wavHeader.channels * _wavHeader.bits_per_sample);
-
-    // the valid amplitude range for values based on the bits per sample
-    long low_limit = 0l;
-    long high_limit = 0l;
-
-    switch (_wavHeader.bits_per_sample) {
-    case 8:
-        low_limit = INT8_MIN;
-        high_limit = INT8_MAX;
-        break;
-    case 16:
-        low_limit = INT16_MIN;
-        high_limit = INT16_MAX;
-        break;
-    case 24:
-    case 32:
-        low_limit = INT32_MIN;
-        high_limit = INT32_MAX;
-        break;
-    }
 }
 
 std::size_t wavfile::read(char* buffer, std::size_t bufferSize)

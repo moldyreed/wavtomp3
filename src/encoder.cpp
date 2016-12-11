@@ -4,18 +4,19 @@
 #include "wavfile.h"
 
 encoder::encoder(std::unique_ptr<ifile>&& input, std::unique_ptr<ifile>&& output) :
-	_input(std::move(input)),
-	_output(std::move(output))
+    _input(std::move(input)),
+    _output(std::move(output))
 {
-	lgf = lame_init();
+    lgf = lame_init();
 
-    if (!lgf)
-		throw std::runtime_error("Can't init lame codec");
+    if (!lgf) {
+        throw std::runtime_error("Can't init lame codec");
+    }
 }
 
 encoder::~encoder()
 {
-	lame_close(lgf);
+    lame_close(lgf);
 }
 
 void encoder::encode()
@@ -26,8 +27,9 @@ void encoder::encode()
     lame_set_analysis(lgf, 1);
     auto params = lame_init_params(lgf);
 
-    if (params)
+    if (params) {
         throw std::runtime_error("Can't init lame with such parameters");
+    }
 
     auto samples_to_read = lame_get_framesize(lgf);
     std::vector<std::int32_t> readBuffer;
@@ -35,20 +37,17 @@ void encoder::encode()
     std::unique_ptr<unsigned char[]> wBuffer = std::make_unique<unsigned char[]>(LAME_MAXMP3BUFFER);
 
     int read = 0, write = 0;
-    while ((read = input.read(readBuffer)) > 0)
-    {
+    while ((read = input.read(readBuffer)) > 0) {
         // TODO pass more or less two channels
         std::vector<std::int32_t> lpcm;
         std::vector<std::int32_t> rpcm;
 
-        for(auto i = 0 ; i <= read; i += 2)
-        {
+        for(auto i = 0 ; i <= read; i += 2) {
             lpcm.push_back( readBuffer[i] );
             rpcm.push_back( readBuffer[i+1] );
         }
         write = lame_encode_buffer_int(lgf, lpcm.data(), rpcm.data(), read / wavHeaders.channels, wBuffer.get(), LAME_MAXMP3BUFFER);
-        if(write < 0)
-        {
+        if(write < 0) {
             throw std::runtime_error("All go wrong");
         }
         _output->write((char*)wBuffer.get(), write);
