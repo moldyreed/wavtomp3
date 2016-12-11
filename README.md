@@ -30,6 +30,6 @@ git clone https://github.com/sickevilfuck/wavtomp3.git --recursive
 cd wavtomp3
 mkdir build
 cd build
-cmake "MinGW Makefiles" -DCMAKE_CXX_COMPILER:STRING=/path/to/g++/exe ..
+cmake "-GCodeBlocks - MinGW Makefiles" -DCMAKE_CXX_COMPILER:STRING=/path/to/g++/exe ..
 cmake --build .
 ```
