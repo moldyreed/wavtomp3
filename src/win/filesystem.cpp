@@ -12,7 +12,7 @@ std::vector<std::string> filesystem::getFilesByPath(const std::string& path, con
     HANDLE hFind = NULL;
 
     if(isDirectory(path)) {
-        auto newPath = std::string(path + "\\" + filePattern);
+        std::string newPath(path + "\\" + filePattern);
         hFind = FindFirstFile(newPath.c_str(), &fdFile);
 
         if (INVALID_HANDLE_VALUE == hFind) {

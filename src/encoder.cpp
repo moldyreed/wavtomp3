@@ -37,10 +37,17 @@ void encoder::encode()
     std::unique_ptr<unsigned char[]> wBuffer = std::make_unique<unsigned char[]>(LAME_MAXMP3BUFFER);
 
     int read = 0, write = 0;
+    // TODO pass more or less two channels
+
+    std::vector<std::int32_t> lpcm;
+    std::vector<std::int32_t> rpcm;
+    lpcm.reserve(readBuffer.capacity()/2);
+    rpcm.reserve(readBuffer.capacity()/2);
+
     while ((read = input.read(readBuffer)) > 0) {
-        // TODO pass more or less two channels
-        std::vector<std::int32_t> lpcm;
-        std::vector<std::int32_t> rpcm;
+
+        lpcm.clear();
+        rpcm.clear();
 
         for(auto i = 0 ; i <= read; i += 2) {
             lpcm.push_back( readBuffer[i] );
@@ -50,9 +57,9 @@ void encoder::encode()
         if(write < 0) {
             throw std::runtime_error("All go wrong");
         }
-        _output->write((char*)wBuffer.get(), write);
+        _output->write(reinterpret_cast<char*>(wBuffer.get()), write);
     }
 
-    int flushSize = lame_encode_flush(lgf, wBuffer.get(), LAME_MAXMP3BUFFER);
-    _output->write((char*)wBuffer.get(), flushSize);
+    auto flushSize = lame_encode_flush(lgf, wBuffer.get(), LAME_MAXMP3BUFFER);
+    _output->write(reinterpret_cast<char*>(wBuffer.get()), flushSize);
 }

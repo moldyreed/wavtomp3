@@ -26,12 +26,12 @@ std::size_t wavfile::read(std::vector<std::int32_t> &inteleavedBuffer)
 {
     inteleavedBuffer.clear();
     auto i = 0;
-    const int b = sizeof(int) * 8;
+    static const int b = sizeof(int) * 8;
     for(; i < inteleavedBuffer.capacity(); i++) {
         std::int32_t datum = 0;
 
         unsigned char chars[_wavHeader.bits_per_sample / 8];
-        _inputFile.read((char*)chars, sizeof(chars));
+        _inputFile.read(reinterpret_cast<char*>(chars), sizeof(chars));
         if (_inputFile.eof() == true) {
             return i;
         }
@@ -106,29 +106,22 @@ void wavfile::readHeaders()
                            (buffer4[1] << 8) |
                            (buffer4[2] << 16) |
                            (buffer4[3] << 24);
-    printf("(29-32) Byte Rate: %u , Bit Rate:%u\n", _wavHeader.byterate, _wavHeader.byterate*8);
 
     _inputFile.read((char*)buffer2, sizeof(buffer2));
     _wavHeader.block_align = buffer2[0] |
                              (buffer2[1] << 8);
-    printf("(33-34) Block Alignment: %u \n", _wavHeader.block_align);
 
     _inputFile.read((char*)buffer2, sizeof(buffer2));
     _wavHeader.bits_per_sample = buffer2[0] |
                                  (buffer2[1] << 8);
-    printf("(35-36) Bits per sample: %u \n", _wavHeader.bits_per_sample);
 
     _inputFile.read((char*)_wavHeader.data_chunk_header, sizeof(_wavHeader.data_chunk_header));
-    printf("(37-40) Data Marker: %s \n", _wavHeader.data_chunk_header);
-
     _inputFile.read((char*)buffer4, sizeof(buffer4));
     _wavHeader.data_size = buffer4[0] |
                            (buffer4[1] << 8) |
                            (buffer4[2] << 16) |
                            (buffer4[3] << 24 );
-    printf("(41-44) Size of data chunk: %u \n", _wavHeader.data_size);
     _wavHeader.size_of_each_sample = (_wavHeader.channels * _wavHeader.bits_per_sample) / 8;
-    printf("Size of each sample:%ld bytes\n", _wavHeader.size_of_each_sample);
     float duration_in_seconds = (float) _wavHeader.overall_size / _wavHeader.byterate;
     printf("Approx.Duration in seconds=%f\n", duration_in_seconds);
     _wavHeader.bytes_in_each_channel = ( _wavHeader.size_of_each_sample / _wavHeader.channels);
@@ -143,7 +136,6 @@ std::size_t wavfile::read(char* buffer, std::size_t bufferSize)
         if (_inputFile.eof() == true) {
             break;
         }
-
     }
     return i;
 }
